@@ -1,0 +1,76 @@
+# Local dev stack: Postgres + Redis + Ollama (open-weight LLM) + API + Celery worker.
+#   docker compose up --build
+#   docker compose exec ollama ollama pull llama3.1:8b      # one-time model download
+#   docker compose exec api python scripts/seed_demo.py      # demo teacher/student/class (optional)
+# Model weights (TrOCR, MiniLM, doctr) are downloaded on first use into the `models` volume.
+
+x-backend: &backend
+  build: .
+  environment: &backend-env
+    DATABASE_URL: postgresql+psycopg2://papermind:papermind@postgres:5432/papermind
+    REDIS_URL: redis://redis:6379/0
+    STORAGE_ROOT: /data/storage
+    PIPELINE_MODE: celery
+    OLLAMA_URL: http://ollama:11434
+    LLM_MODEL: llama3.1:8b
+    SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+    CORS_ORIGINS: http://localhost:5173
+  volumes:
+    - storage:/data/storage
+    - models:/models
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_started
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: papermind
+      POSTGRES_PASSWORD: papermind
+      POSTGRES_DB: papermind
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U papermind"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports: ["5432:5432"]
+
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama:/root/.ollama
+    ports: ["11434:11434"]
+    # For GPU inference add (NVIDIA container toolkit required):
+    # deploy: { resources: { reservations: { devices: [{ driver: nvidia, count: all, capabilities: [gpu] }] } } }
+
+  api:
+    <<: *backend
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports: ["8000:8000"]
+
+  worker:
+    <<: *backend
+    # One task at a time per worker: OCR + LLM inference is memory hungry. Scale with --scale worker=N.
+    command: celery -A app.tasks.celery_app worker --loglevel=info --concurrency=1
+    depends_on:
+      api:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  pgdata:
+  storage:
+  models:
+  ollama:
