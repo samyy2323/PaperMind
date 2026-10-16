@@ -67,6 +67,9 @@ pytest -q                                       # 59+ tests, no GPU or models ne
 ```
 
 * Read `HANDOFF.md` first: it records what is done, what is verified, and the known weaknesses.
-* Large files are **not** in the repo: the trained correction model (`backend/models/`), datasets (`testdata/`), and the demo
+* The trained correction model (2.3 GB) is too big for git, so it is attached to this repo's **GitHub Release** `model-v1`.
+  Get it with `python backend/scripts/fetch_model.py` (then `CORRECTION_MODEL_PATH=./models/byt5-correction` in `backend/.env`).
+  See `backend/training/MODEL_CARD.md` for what it is and its limits.
+* Other large files are **not** in the repo: datasets (`testdata/`) and the demo
   storage. See `backend/training/README.md` for training the ByT5 correction model and `backend/README.md` for the API.
 * Branch per change (`git checkout -b feature/...`), keep tests passing, open a pull request.
