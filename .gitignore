@@ -6,3 +6,7 @@ backend/storage
 backend/*.db
 __pycache__
 .pytest_cache
+backend/training/*.zip
+backend/models/
+testdata/
+backend/storage_*/

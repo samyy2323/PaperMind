@@ -1,0 +1,85 @@
+Encapsulation bundles data and methods into a single class.
+Inheritance allows a subclass to reuse the behaviour of a superclass.
+Polymorphism enables objects of different classes to respond to the same method call.
+Abstraction hides implementation details and exposes only the interface.
+The Liskov Substitution Principle states that objects of a subclass should be replaceable with objects of the superclass.
+A constructor is a special method invoked automatically when an object is created.
+The final keyword in Java prevents a class from being subclassed.
+Method overloading allows multiple methods with the same name but different parameters.
+Method overriding occurs when a subclass provides a different implementation of a superclass method.
+An interface defines a contract that implementing classes must fulfil.
+Abstract classes cannot be instantiated directly.
+The singleton pattern ensures only one instance of a class exists at runtime.
+Composition is often preferred over inheritance to reduce coupling.
+Access modifiers: public, private, protected, and default.
+Static members belong to the class rather than to any instance.
+A stack uses Last In First Out (LIFO) ordering.
+A queue uses First In First Out (FIFO) ordering.
+Binary search runs in O(log n) time on a sorted array.
+Quicksort has an average time complexity of O(n log n).
+Heap sort uses a max-heap or min-heap data structure.
+The factory method pattern defines an interface for creating objects.
+The observer pattern defines a one-to-many dependency between objects.
+Tight coupling makes unit testing difficult.
+Dependency injection reduces tight coupling between components.
+An exception is an event that disrupts the normal flow of a program.
+Garbage collection automatically reclaims memory occupied by unused objects.
+Multithreading allows concurrent execution of two or more threads.
+Synchronisation prevents race conditions in multithreaded programs.
+The decorator pattern attaches additional responsibilities to an object dynamically.
+UML class diagrams show classes, attributes, methods, and relationships.
+Agile methodology emphasises iterative development and customer collaboration.
+The waterfall model is a linear sequential approach to software development.
+A use case diagram captures functional requirements from a user's perspective.
+Regression testing verifies that new changes have not broken existing functionality.
+Continuous integration merges developer code changes into a shared repository frequently.
+Version control systems track changes to source code over time.
+Code review improves code quality and shares knowledge among team members.
+A software requirement specification (SRS) documents what a system must do.
+Black-box testing treats the system as an opaque unit and tests inputs and outputs.
+White-box testing examines the internal structure of the code.
+McCabe's cyclomatic complexity measures the number of linearly independent paths.
+SOLID stands for Single responsibility, Open-closed, Liskov, Interface segregation, Dependency inversion.
+Technical debt accumulates when short-term shortcuts are taken instead of proper solutions.
+A sprint in Scrum is a time-boxed iteration typically lasting two weeks.
+The product backlog is an ordered list of features and requirements for the product.
+Pair programming involves two developers working together at one workstation.
+Test-driven development writes tests before writing the implementation code.
+A deployment pipeline automates the building, testing, and deployment of software.
+Static analysis tools detect potential bugs without executing the program.
+Software entropy refers to the gradual decline in software quality over time.
+A neural network is a computational model inspired by the human brain.
+Supervised learning uses labelled training data to learn a mapping from inputs to outputs.
+Unsupervised learning finds patterns in data without explicit labels.
+Reinforcement learning trains agents through reward and punishment signals.
+Gradient descent minimises a loss function by iteratively updating parameters.
+Overfitting occurs when a model learns the training data noise rather than the underlying pattern.
+Regularisation techniques such as L1 and L2 penalty reduce overfitting.
+A convolutional neural network is well suited for image recognition tasks.
+Recurrent neural networks process sequential data by maintaining hidden state.
+The attention mechanism allows the model to focus on relevant parts of the input.
+Precision measures the fraction of predicted positives that are actually positive.
+Recall measures the fraction of actual positives correctly predicted.
+The F1-score is the harmonic mean of precision and recall.
+K-means clustering partitions data into k clusters by minimising intra-cluster distance.
+Principal Component Analysis reduces dimensionality by projecting onto principal components.
+Decision trees split data based on feature values to make predictions.
+Random forests combine many decision trees to reduce variance.
+Support vector machines find the hyperplane with the maximum margin between classes.
+Natural language processing enables computers to understand human language.
+Transfer learning reuses a model trained on one task for a different but related task.
+Symmetric encryption uses the same key for encryption and decryption.
+Asymmetric encryption uses a public key to encrypt and a private key to decrypt.
+A firewall monitors and controls incoming and outgoing network traffic.
+SQL injection occurs when untrusted input is inserted into a SQL query.
+Cross-site scripting (XSS) injects malicious scripts into web pages viewed by other users.
+A buffer overflow overwrites adjacent memory beyond a buffer's boundary.
+Two-factor authentication requires two forms of identification.
+Hashing converts data into a fixed-length string that cannot be reversed.
+A man-in-the-middle attack intercepts communication between two parties.
+Penetration testing simulates cyberattacks to identify vulnerabilities.
+SSL/TLS encrypts data transmitted over a network.
+A VPN creates an encrypted tunnel between the client and the VPN server.
+Phishing attacks trick users into revealing sensitive information.
+Zero-day vulnerabilities are unknown to the software vendor.
+The principle of least privilege grants only the minimum access required.

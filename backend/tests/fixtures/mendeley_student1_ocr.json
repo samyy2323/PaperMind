@@ -1,0 +1,417 @@
+[
+ {
+  "raw": "d",
+  "text": "d",
+  "confidence": 0.9678
+ },
+ {
+  "raw": "2. c",
+  "text": "2. c",
+  "confidence": 0.8209
+ },
+ {
+  "raw": "3 . B.",
+  "text": "3. B.",
+  "confidence": 0.8467
+ },
+ {
+  "raw": "4 . A",
+  "text": "4. A",
+  "confidence": 0.9304
+ },
+ {
+  "raw": "S. B.",
+  "text": "S.B.",
+  "confidence": 0.8656
+ },
+ {
+  "raw": "6 . B.",
+  "text": "6. B.",
+  "confidence": 0.9029
+ },
+ {
+  "raw": "7. B.",
+  "text": "7. B.",
+  "confidence": 0.8943
+ },
+ {
+  "raw": "8 . D",
+  "text": "8. D",
+  "confidence": 0.7717
+ },
+ {
+  "raw": "9. D",
+  "text": "9. D",
+  "confidence": 0.7994
+ },
+ {
+  "raw": "10. 3",
+  "text": "10. 3",
+  "confidence": 0.895
+ },
+ {
+  "raw": "19. B.",
+  "text": "19. B.",
+  "confidence": 0.8392
+ },
+ {
+  "raw": "12. C",
+  "text": "12. C",
+  "confidence": 0.7713
+ },
+ {
+  "raw": "13 . B.",
+  "text": "13. B.",
+  "confidence": 0.918
+ },
+ {
+  "raw": "14. C",
+  "text": "14. C",
+  "confidence": 0.8817
+ },
+ {
+  "raw": "is . B.",
+  "text": "is B.",
+  "confidence": 0.7179
+ },
+ {
+  "raw": "16. c",
+  "text": "16. c",
+  "confidence": 0.8346
+ },
+ {
+  "raw": "17. B.",
+  "text": "17. B.",
+  "confidence": 0.8594
+ },
+ {
+  "raw": "18. c",
+  "text": "18.0",
+  "confidence": 0.9511
+ },
+ {
+  "raw": "49. B.",
+  "text": "4. B.",
+  "confidence": 0.8931
+ },
+ {
+  "raw": "20 c",
+  "text": "20 c",
+  "confidence": 0.9286
+ },
+ {
+  "raw": "21supervised learning is a machine learning algorithm",
+  "text": "2) Supervised learning is a machine learning algorithm",
+  "confidence": 0.8713
+ },
+ {
+  "raw": "which we give \" labeled . data as input and expect",
+  "text": "which we give \"labeled data as input and expect",
+  "confidence": 0.8934
+ },
+ {
+  "raw": "output as prediction we cwant .",
+  "text": "output as prediction we want.",
+  "confidence": 0.9241
+ },
+ {
+  "raw": "NY total 3",
+  "text": "NY total 3",
+  "confidence": 0.6698
+ },
+ {
+  "raw": "26 . Distinguished Defence Force strict medical undergraduate , ed \" Straitshire students .",
+  "text": "26. Distinguished Defence Force strict medical undergraduated, Straitshire students",
+  "confidence": 0.41
+ },
+ {
+  "raw": "csv file , excel file .",
+  "text": "csv file, excel file.",
+  "confidence": 0.9061
+ },
+ {
+  "raw": "- semi-structured data are the data which are half",
+  "text": "- semi-structured data are the data which are half",
+  "confidence": 0.9284
+ },
+ {
+  "raw": "organized such as , JSON , html , file .",
+  "text": "organized such as: JSON, html, file.",
+  "confidence": 0.813
+ },
+ {
+  "raw": "28 . 3ata \" pre-processing is the process for removing incomplete .",
+  "text": "2. 3ata\" pre-processing is the process for removing incomplete",
+  "confidence": 0.8937
+ },
+ {
+  "raw": "incorrect and inaccurate data and replacing 'm issuing",
+  "text": "incorrect and inaccurate data and replacing 'm issuing",
+  "confidence": 0.8351
+ },
+ {
+  "raw": "values .",
+  "text": "values.",
+  "confidence": 0.9995
+ },
+ {
+  "raw": "25 list out any 2 major applications of data science :",
+  "text": "2) List out any 2 major applications of data science:",
+  "confidence": 0.9544
+ },
+ {
+  "raw": "\" Financial sector .",
+  "text": "\"Financial sector",
+  "confidence": 0.8255
+ },
+ {
+  "raw": "\" Transportation sector .",
+  "text": "\"Transportation sector",
+  "confidence": 0.985
+ },
+ {
+  "raw": "# comment on the performance of the classifiers .",
+  "text": "Q4) Comment on the performance of the classifiers",
+  "confidence": 0.8648
+ },
+ {
+  "raw": "P.P.P.P.P.P.P.P.P.P.P.P.P.P.P. \" : \" P.C. Good classification . The dis' istance between gutters .",
+  "text": "P.P.P.P.P.P.P.P.P.P.P.P.P.P.P. \" : \" P.C. Good classification . The dis' istance between gutters .",
+  "confidence": 0.6878
+ },
+ {
+  "raw": "is large and no data between gutters .",
+  "text": "is large and no data between gutters.",
+  "confidence": 0.9769
+ },
+ {
+  "raw": "P2 : \" Bad classification . \" There are data between .",
+  "text": "P2: \"Bad classification\": There are data between",
+  "confidence": 0.7653
+ },
+ {
+  "raw": "\" p. # # # # and classification . The distance between gutters .",
+  "text": "\"p. Q7. Classification. The distance between gutters",
+  "confidence": 0.7269
+ },
+ {
+  "raw": "is small .",
+  "text": "is small.",
+  "confidence": 0.9862
+ },
+ {
+  "raw": "27 . We find out on outlier , in the data by using outlier .",
+  "text": "2- We find out on outlier, in the data by using outlier",
+  "confidence": 0.9197
+ },
+ {
+  "raw": "destection technique such as ziscove and icr.",
+  "text": "destruction technique such as ziscove and ice.",
+  "confidence": 0.7019
+ },
+ {
+  "raw": "for consideration 4,2, Connaughting to",
+  "text": "for consideration 4, 2, Connaughting to",
+  "confidence": 0.4569
+ },
+ {
+  "raw": "sp A. no , 1/1 - 20.",
+  "text": "Sp A.no, 1/1-2020.",
+  "confidence": 0.6284
+ },
+ {
+  "raw": "2/ total 3",
+  "text": "2/ total 3",
+  "confidence": 0.7599
+ },
+ {
+  "raw": "22. comment on Model M1 :",
+  "text": "22. comment on Model M1:",
+  "confidence": 0.8156
+ },
+ {
+  "raw": "This model doesn't have high accuracy , so it needs better .",
+  "text": "This model doesn't have high accuracy, so it needs better",
+  "confidence": 0.9621
+ },
+ {
+  "raw": "training dataset . The training ' dataset \" or more than one",
+  "text": "training dataset. The training 'dataset' or more than one",
+  "confidence": 0.8917
+ },
+ {
+  "raw": "training dataset .",
+  "text": "training dataset.",
+  "confidence": 0.9952
+ },
+ {
+  "raw": "24 . Elucidate any 2 challenges of Machine learning -",
+  "text": "2. Elucidate any challenges of Machine Learning -",
+  "confidence": 0.8635
+ },
+ {
+  "raw": "Hard to find dataset . to work on . ( dataset ' are",
+  "text": "Hard to find dataset to work on (dataset) are",
+  "confidence": 0.812
+ },
+ {
+  "raw": "expensive and confidential .",
+  "text": "expensive and confidential.",
+  "confidence": 0.9845
+ },
+ {
+  "raw": "\" Required large data to train in order to get accuracy .",
+  "text": "\"required large data to train in order to get accuracy.",
+  "confidence": 0.997
+ },
+ {
+  "raw": "all . K in K-means . algorithm is the pre-defined cluster .",
+  "text": "all K in K-means algorithm is the pre-defined cluster.",
+  "confidence": 0.9153
+ },
+ {
+  "raw": "29 . Data normalization is required in K.NN because after",
+  "text": "2. Data normalization is required in KNN because after",
+  "confidence": 0.9391
+ },
+ {
+  "raw": "data is normalized it is easy to give it .point , so it .",
+  "text": "data is normalized it is easy to give it a point, so it",
+  "confidence": 0.8783
+ },
+ {
+  "raw": "will not over fitting or underfitting .",
+  "text": "will not overfitting or underfitting.",
+  "confidence": 0.967
+ },
+ {
+  "raw": "23 . Regression analysis \" is the method uses to analysis the",
+  "text": "2. Regression analysis\" is the method uses to analysis the",
+  "confidence": 0.9595
+ },
+ {
+  "raw": "output of regression .",
+  "text": "output of regression.",
+  "confidence": 0.9979
+ },
+ {
+  "raw": "32 . Name few hyperparameters of machine learning algorithm .",
+  "text": "3. Name few hyperparameters of machine learning algorithm",
+  "confidence": 0.8673
+ },
+ {
+  "raw": "38. gradient descent ris a",
+  "text": "38. Gradient descent is a",
+  "confidence": 0.7367
+ },
+ {
+  "raw": "35 . Radical basis function kernel works , by using margin vector",
+  "text": "3. Radical basis function kernel works, by using margin vector",
+  "confidence": 0.8752
+ },
+ {
+  "raw": "to calculate distance . margin point and hyperplane .",
+  "text": "to calculate distance, margin point and hyperplane",
+  "confidence": 0.9656
+ },
+ {
+  "raw": "3 1 total 3",
+  "text": "3 ) total 3",
+  "confidence": 0.9678
+ },
+ {
+  "raw": "0.000 Women and",
+  "text": "0.000 Women and",
+  "confidence": 0.2025
+ },
+ {
+  "raw": "settled shown to be economic signal sound I'mself Labour still",
+  "text": "settled shown to be economic signal and I 'mself Labour still",
+  "confidence": 0.5271
+ },
+ {
+  "raw": "smo most snow to tocolob primary after the club promised",
+  "text": "should show to colob primary after the club promised",
+  "confidence": 0.5837
+ },
+ {
+  "raw": "- Located to permanent",
+  "text": "- Located to permanent",
+  "confidence": 0.2565
+ },
+ {
+  "raw": "gagwood anhibit to expositions 2 and scholarship . 0 0",
+  "text": "Gagwood arrivit to expositions and scholarships",
+  "confidence": 0.4027
+ },
+ {
+  "raw": "sno\" \" together ) , no show at the club long at Bonnall .",
+  "text": "\" sno\" together), no show at the club long at Bonnall.",
+  "confidence": 0.5951
+ },
+ {
+  "raw": "Distributed long even teenagers .",
+  "text": "Distributed long even teenagers.",
+  "confidence": 0.4588
+ },
+ {
+  "raw": "Resources top of voters in most of club special business .",
+  "text": "Resources top of voters in most of club special business",
+  "confidence": 0.6061
+ },
+ {
+  "raw": "soleuls bonitsibring set # at multiple encoom-al out of his",
+  "text": "solving set # at multiple encoders out of his",
+  "confidence": 0.5061
+ },
+ {
+  "raw": "of the successful union 021million . at most of most known name wallade , etc",
+  "text": "of the successful union $21million at most of most known names wallade, etc",
+  "confidence": 0.4154
+ },
+ {
+  "raw": "\" It may be sent to 20021st.class tomorrow . 9 000",
+  "text": "\" It may be sent to 2002 1st class tomorrow. 900",
+  "confidence": 0.3788
+ },
+ {
+  "raw": "prottitious so prittet . round from Africa",
+  "text": "protitions so prittet round from Africa",
+  "confidence": 0.4522
+ },
+ {
+  "raw": "performance of issues about them , self areplants monoeonpour . As",
+  "text": "performance of issues about themselves. As",
+  "confidence": 0.3768
+ },
+ {
+  "raw": "voiseers from the two-two .",
+  "text": "voisers from the two-two",
+  "confidence": 0.5108
+ },
+ {
+  "raw": "grimed opinion . to emotion to accompany me most smooth .",
+  "text": "grimed opinion to emotion to accompany me most smooth.",
+  "confidence": 0.413
+ },
+ {
+  "raw": "at the week that took up .",
+  "text": "at the week that took up.",
+  "confidence": 0.4039
+ },
+ {
+  "raw": "notary no power prices get estuous losses . manning good 0 1",
+  "text": "notably no power prices get enough losses making good. \"",
+  "confidence": 0.3736
+ },
+ {
+  "raw": "smoking to appeal . I know throop response some talk , struggling 0 0",
+  "text": "smoking to appeal. I know the loop responds some talk, struggling on",
+  "confidence": 0.3883
+ },
+ {
+  "raw": "a half ,",
+  "text": "a half,",
+  "confidence": 0.3578
+ }
+]

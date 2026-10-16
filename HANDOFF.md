@@ -86,7 +86,7 @@ Demo accounts (from `seed_demo.py`, password `demo1234`): teacher `kulkarni@coll
 - No Docker, Postgres or Redis.
 - Ollama 0.34.4 with one model pulled: `llama3.2:3b` (2 GB). `llama3.1:8b` is the config default and is not pulled.
 - Python venv at `backend/.venv`. Important pins: `transformers>=4.44,<5`, `sentence-transformers>=3.0,<5`, `huggingface_hub<1.0`, `sentencepiece`, `protobuf`. Transformers 5 cannot load TrOCR's tokenizer.
-- Hugging Face cache is in `C:\Users\Samarth L\.cache\huggingface` (TrOCR, MiniLM). doctr downloads its detection weights on first use.
+- Hugging Face cache is in `~/.cache/huggingface` (TrOCR, MiniLM). doctr downloads its detection weights on first use.
 - Do not install Python packages while the server is running; Windows locks the files.
 
 ## 7. Project layout

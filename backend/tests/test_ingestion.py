@@ -96,3 +96,51 @@ def test_segmentation_keeps_lines_before_first_marker_when_number_was_mangled():
     # ...but a header before Q1's own marker is still dropped
     seg = MarkerSegmenter().segment(_lines("Name: Rohan", "1) (b)", "2) True"), [1, 2])
     assert seg[1].text == "(b)"
+
+
+def test_segmentation_handles_answers_written_out_of_order():
+    lines = _lines("22. Comment on Model M1: needs better data", "more text for 22", "24. Hard to find datasets",
+                   "31. k is the pre-defined cluster", "29. Normalization is required", "23. Regression analysis is")
+    seg = MarkerSegmenter().segment(lines, [22, 23, 24, 29, 31])
+    assert seg[22].text.startswith("Comment on Model M1") and "more text for 22" in seg[22].text
+    assert seg[24].text == "Hard to find datasets" and seg[31].text == "k is the pre-defined cluster"
+    assert seg[29].text == "Normalization is required" and seg[23].text == "Regression analysis is"
+
+
+# ---- real OCR lines from a scanned sheet of the public Mendeley dataset (Student_1) ---------------------------------
+def _real_sheet():
+    import json
+    from pathlib import Path
+
+    rows = json.loads((Path(__file__).parent / "fixtures" / "mendeley_student1_ocr.json").read_text())
+    return [SegLine(raw=r["raw"], text=r["raw"], confidence=r["confidence"]) for r in rows]
+
+
+def test_real_sheet_mcq_block_is_aligned_despite_garbled_numbers():
+    types = {n: "objective" if n <= 20 else "subjective" for n in range(1, 36)}
+    seg = MarkerSegmenter().segment(_real_sheet(), list(range(1, 36)), types)
+    letters = {n: seg[n].text.strip().upper() for n in range(1, 21)}
+    truth = "D C B A B B B D D D B C B C B C B C B C".split()  # what Student_1 wrote (teacher's CSV)
+    # OCR read "5" as S, "11" as 19, "15" as "is", "19" as 49, and lost the letter of Q10 - order repairs all of those
+    assert [letters[n] for n in (1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)] == \
+           [truth[n - 1] for n in (1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)]
+    assert letters[10] == "3"  # unreadable, but still assigned to Q10 (the grader will flag it)
+
+
+def test_real_sheet_short_answers_follow_their_own_numbers():
+    types = {n: "objective" if n <= 20 else "subjective" for n in range(1, 36)}
+    seg = MarkerSegmenter().segment(_real_sheet(), list(range(1, 36)), types)
+    assert seg[21].method == "markers"
+    assert "learning" in seg[21].text.lower() and "supervised" in seg[21].text.lower()  # "21supervised": glued number
+    assert "Model M1" in seg[22].text or "model m1" in seg[22].text.lower()
+    assert "challenges" in seg[24].text.lower()
+    assert "normalization" in seg[29].text.lower()
+    assert "regression" in seg[23].text.lower()
+
+
+def test_number_followed_only_by_a_space_is_a_marker():
+    lines = _lines("21. Define it", "answer text", "25 list out any 2 major applications", "- finance", "26. distinguish")
+    types = {n: "subjective" for n in range(21, 27)}
+    seg = MarkerSegmenter().segment(lines, list(range(21, 27)), types)
+    assert seg[25].text.startswith("list out any 2 major applications") and "finance" in seg[25].text
+    assert seg[21].text == "Define it\nanswer text" and seg[26].text == "distinguish"

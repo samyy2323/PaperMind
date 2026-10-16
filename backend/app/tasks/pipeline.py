@@ -113,7 +113,8 @@ def step_segmentation(sheet_id: int) -> None:
         if not questions:
             raise PipelineError("The exam has no questions.")
         by_number = {q.question_number: q for q in questions}
-        segments = segmentation.get_segmenter("markers").segment(lines, list(by_number))
+        types = {n: q.question_type for n, q in by_number.items()}
+        segments = segmentation.get_segmenter("markers").segment(lines, list(by_number), types)
         db.execute(delete(StudentAnswer).where(StudentAnswer.answer_sheet_id == sheet_id))
         for number, q in by_number.items():
             seg = segments[number]
@@ -164,6 +165,8 @@ def step_grading(sheet_id: int) -> None:
             a.extracted_score, a.max_score, a.confidence = r.score, r.max_score, r.confidence
             a.embedding_similarity, a.llm_justification = r.similarity, r.justification
             a.objective_correct, a.flagged_reason = r.objective_correct, r.flagged_reason
+            if (a.debug or {}).get("segmentation") == "positional" and not a.flagged_reason:
+                a.flagged_reason = "segmentation_uncertain"  # answers were assigned by position, not by question number
             a.debug = {**(a.debug or {}), **r.debug}
         if errors:
             sheet.error_message = f"The grading model failed on {errors} answer(s). Reprocess once it is available."

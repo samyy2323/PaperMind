@@ -66,6 +66,9 @@ def grade_objective(student: str, reference: str, marks: float) -> ObjectiveResu
     ref_letter, ref_text = _split_option(reference)
     stu_letter, stu_text = _split_option(student)
 
+    if ref_letter and not stu_letter and len(re.sub(r"[^\w]", "", student)) <= 2:
+        return result(False, 0.4, f"Could not read an option letter from '{student}' - verify manually.")
+
     if ref_letter and stu_letter:
         if ref_letter == stu_letter:
             return result(True, 1.0, f"Option {stu_letter} matches.")

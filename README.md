@@ -51,3 +51,22 @@ An answer is sent to the **Needs review** queue when either rule matches:
 - **Relevance mismatch:** the answer is subjective, its embedding similarity to the syllabus (`relevance`) is below `0.35`, **and** it scored at least 70% of the marks. This pattern suggests a prompt-injection or keyword-stuffed answer, so it gets a red shield icon.
 
 An answer leaves the queue when the teacher overrides its score (a reason is required) or accepts the AI score. Until then, students see **Pending teacher review** instead of a mark, and that answer is left out of their total.
+
+## Contributing (getting started)
+
+```bash
+git clone <this repo> && cd PaperMind
+npm install && npm run dev                      # frontend on http://localhost:5173 (runs on mock data by default)
+
+cd backend
+python -m venv .venv && .venv/Scripts/activate  # source .venv/bin/activate on macOS/Linux
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+pip install -r requirements.txt
+cp .env.example .env                            # local settings (never committed)
+pytest -q                                       # 59+ tests, no GPU or models needed
+```
+
+* Read `HANDOFF.md` first: it records what is done, what is verified, and the known weaknesses.
+* Large files are **not** in the repo: the trained correction model (`backend/models/`), datasets (`testdata/`), and the demo
+  storage. See `backend/training/README.md` for training the ByT5 correction model and `backend/README.md` for the API.
+* Branch per change (`git checkout -b feature/...`), keep tests passing, open a pull request.
