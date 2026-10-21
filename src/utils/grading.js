@@ -14,6 +14,8 @@ export function answerFlags(answer, question) {
     return {
       lowConfidence: answer.flaggedReason === 'low_confidence' || answer.flaggedReason === 'parse_failure',
       relevanceMismatch: answer.flaggedReason === 'injection_suspected',
+      answerNotFound: answer.flaggedReason === 'answer_not_found',
+      segmentationUncertain: answer.flaggedReason === 'segmentation_uncertain',
     };
   }
   const lowConfidence = answer.confidence < CONFIDENCE_THRESHOLD;
@@ -21,7 +23,8 @@ export function answerFlags(answer, question) {
     question.type === 'subjective' &&
     answer.relevance < LOW_RELEVANCE_THRESHOLD &&
     answer.aiScore / question.marks >= HIGH_SCORE_RATIO;
-  return { lowConfidence, relevanceMismatch };
+  const answerNotFound = !answer.ocrText?.trim();
+  return { lowConfidence, relevanceMismatch, answerNotFound, segmentationUncertain: false };
 }
 
 // An answer needs review if flagged and the teacher hasn't resolved it yet.
@@ -29,7 +32,7 @@ export function needsReview(answer, question) {
   if (answer.override || answer.reviewed) return false;
   if (typeof answer.pendingReview === 'boolean') return answer.pendingReview;
   const f = answerFlags(answer, question);
-  return f.lowConfidence || f.relevanceMismatch;
+  return f.lowConfidence || f.relevanceMismatch || f.answerNotFound || f.segmentationUncertain;
 }
 
 export function summarizeSubmission(submission, exam) {

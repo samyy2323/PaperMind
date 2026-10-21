@@ -95,7 +95,10 @@ def step_correction(sheet_id: int) -> None:
     storage = get_storage()
     lines = json.loads(storage.read(_art(sheet_id, "ocr.json")))
     fixed = correction_service.get_corrector().correct([l["text"] for l in lines])
-    out = [{"raw": l["text"], "text": t, "confidence": l["confidence"], "page": l["page"]} for l, t in zip(lines, fixed)]
+    out = [
+        {"raw": l["text"], "text": t, "confidence": l["confidence"], "page": l["page"], "box": l.get("box")}
+        for l, t in zip(lines, fixed)
+    ]
     storage.save(_art(sheet_id, "corrected.json"), json.dumps(out).encode())
 
 
@@ -104,7 +107,12 @@ def step_correction(sheet_id: int) -> None:
 def step_segmentation(sheet_id: int) -> None:
     storage = get_storage()
     lines = [
-        segmentation.SegLine(raw=l["raw"], text=l["text"], confidence=l["confidence"])
+        segmentation.SegLine(
+            raw=l["raw"],
+            text=l["text"],
+            confidence=l["confidence"],
+            box=tuple(l["box"]) if l.get("box") is not None else None,
+        )
         for l in json.loads(storage.read(_art(sheet_id, "corrected.json")))
     ]
     with session_scope() as db:
@@ -114,7 +122,14 @@ def step_segmentation(sheet_id: int) -> None:
             raise PipelineError("The exam has no questions.")
         by_number = {q.question_number: q for q in questions}
         types = {n: q.question_type for n, q in by_number.items()}
-        segments = segmentation.get_segmenter("markers").segment(lines, list(by_number), types)
+        contexts = {
+            n: f"{q.question_text}\n{q.reference_answer}".strip()
+            for n, q in by_number.items()
+        }
+        embedder = get_embedder()
+        segments = segmentation.get_segmenter("markers").segment(
+            lines, list(by_number), types, question_contexts=contexts, embedder=embedder
+        )
         db.execute(delete(StudentAnswer).where(StudentAnswer.answer_sheet_id == sheet_id))
         for number, q in by_number.items():
             seg = segments[number]
@@ -122,7 +137,7 @@ def step_segmentation(sheet_id: int) -> None:
                 StudentAnswer(
                     answer_sheet_id=sheet_id, question_id=q.id, ocr_raw_text=seg.raw_text,
                     corrected_text=seg.text, ocr_confidence=seg.confidence, max_score=q.marks,
-                    debug={"segmentation": seg.method},
+                    debug={"segmentation": seg.method, "match_score": seg.match_score},
                 )
             )
 
@@ -167,6 +182,10 @@ def step_grading(sheet_id: int) -> None:
             a.objective_correct, a.flagged_reason = r.objective_correct, r.flagged_reason
             if (a.debug or {}).get("segmentation") == "positional" and not a.flagged_reason:
                 a.flagged_reason = "segmentation_uncertain"  # answers were assigned by position, not by question number
+            elif (a.debug or {}).get("segmentation") == "content_match" and not a.flagged_reason:
+                m_score = (a.debug or {}).get("match_score")
+                if m_score is not None and m_score < 0.50:
+                    a.flagged_reason = "low_confidence"
             a.debug = {**(a.debug or {}), **r.debug}
         if errors:
             sheet.error_message = f"The grading model failed on {errors} answer(s). Reprocess once it is available."

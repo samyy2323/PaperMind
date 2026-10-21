@@ -24,6 +24,31 @@ class LineDetector(Protocol):
 
 
 # --------------------------------------------------------------------------- shared helpers
+def is_blank_page(image: Image.Image, min_ink_ratio: float = 0.0015, min_darkness_delta: float = 30.0) -> bool:
+    """Return True if an image is essentially blank or has only faint bleed-through."""
+    gray = np.asarray(image.convert("L"))
+    if gray.size == 0:
+        return True
+    bg = float(np.percentile(gray, 95))
+    if bg < 50:
+        return False
+    dark_mask = gray < (bg - min_darkness_delta)
+    ink_ratio = float(dark_mask.sum()) / float(gray.size)
+    return ink_ratio < min_ink_ratio
+
+
+def suppress_bleed_through(image: Image.Image, ghost_threshold: float = 28.0) -> Image.Image:
+    """Brighten faint ghost ink / bleed-through that is barely darker than the paper background."""
+    arr = np.asarray(image.convert("RGB")).copy()
+    gray = np.asarray(Image.fromarray(arr).convert("L"))
+    bg = float(np.percentile(gray, 95))
+    if bg < 80:
+        return image
+    ghost_mask = (gray >= (bg - ghost_threshold)) & (gray < bg)
+    arr[ghost_mask] = int(min(255, bg))
+    return Image.fromarray(arr)
+
+
 def _pad_crop(img: Image.Image, box: tuple[float, float, float, float], pad: float = 0.15) -> Image.Image:
     x0, y0, x1, y1 = box
     h = y1 - y0
@@ -125,15 +150,21 @@ class ProjectionLineDetector:
             else:
                 merged.append(b)
 
-        out = []
+        out: list[tuple[list[Image.Image], tuple[float, float, float, float]]] = []
         for y0, y1 in merged:
             if y1 - y0 < MIN_LINE_HEIGHT:
                 continue
             cols = np.where(ink[y0:y1].sum(axis=0) > 0)[0]
             if cols.size == 0:
                 continue
-            out.append(split_wide(_pad_crop(image, (cols[0], y0, cols[-1] + 1, y1))))
+            x0, x1 = float(cols[0]), float(cols[-1] + 1)
+            box = (x0, float(y0), x1, float(y1))
+            crops = split_wide(_pad_crop(image, (x0, y0, x1, y1)))
+            out.append((crops, box))
         return out
+
+    def detect(self, image: Image.Image) -> list[list[Image.Image]]:
+        return [crops for crops, _ in self.detect_with_boxes(image)]
 
 
 # --------------------------------------------------------------------------- doctr detector
@@ -143,16 +174,18 @@ class DoctrLineDetector:
 
         self._pred = detection_predictor(arch=arch, pretrained=True, assume_straight_pages=True)
 
-    def detect(self, image: Image.Image) -> list[list[Image.Image]]:
+    def detect_with_boxes(self, image: Image.Image) -> list[tuple[list[Image.Image], tuple[float, float, float, float]]]:
         arr = np.asarray(image.convert("RGB"))
         H, W = arr.shape[:2]
         res = self._pred([arr])[0]
         boxes = res["words"] if isinstance(res, dict) else res
         words = [(b[0] * W, b[1] * H, b[2] * W, b[3] * H) for b in boxes]
         words = [b for b in words if (b[3] - b[1]) >= MIN_LINE_HEIGHT * 0.6]
-        out: list[list[Image.Image]] = []
+        out: list[tuple[list[Image.Image], tuple[float, float, float, float]]] = []
         for line in group_words_into_lines(words):
             ly0, ly1 = min(b[1] for b in line), max(b[3] for b in line)
+            lx0, lx1 = min(b[0] for b in line), max(b[2] for b in line)
+            line_box = (float(lx0), float(ly0), float(lx1), float(ly1))
             lh = ly1 - ly0
             # accumulate words into segments bounded by aspect ratio
             seg: list[tuple[float, float, float, float]] = []
@@ -167,8 +200,11 @@ class DoctrLineDetector:
                     seg = trial
             if seg:
                 segments.append(_pad_crop(image, (seg[0][0], ly0, seg[-1][2], ly1)))
-            out.append(segments)
+            out.append((segments, line_box))
         return out
+
+    def detect(self, image: Image.Image) -> list[list[Image.Image]]:
+        return [crops for crops, _ in self.detect_with_boxes(image)]
 
 
 @once

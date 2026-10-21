@@ -103,7 +103,10 @@ class Seq2SeqCorrector:
 
 
 @once
-def _load(path: str) -> Corrector:
+def _load(path: str, enabled: bool) -> Corrector:
+    if not enabled:
+        log.info("ENABLE_CORRECTION is false: text correction is disabled (pass-through ablation)")
+        return PassThroughCorrector()
     if path:
         return Seq2SeqCorrector(path)
     log.info("CORRECTION_MODEL_PATH not set: text correction is a pass-through")
@@ -111,4 +114,5 @@ def _load(path: str) -> Corrector:
 
 
 def get_corrector() -> Corrector:
-    return _load(get_settings().CORRECTION_MODEL_PATH)
+    s = get_settings()
+    return _load(s.CORRECTION_MODEL_PATH, s.ENABLE_CORRECTION)

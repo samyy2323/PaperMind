@@ -16,6 +16,7 @@ class OCRLine:
     page: int  # 0-based page index
     text: str
     confidence: float
+    box: tuple[float, float, float, float] | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -38,20 +39,35 @@ class TrOCREngine:
         self.detector, self.recognizer, self.batch_size = detector, recognizer, batch_size
 
     def read_image(self, image: Image.Image, page: int) -> list[OCRLine]:
-        lines = self.detector.detect(image)
+        from app.services.ocr.detectors import is_blank_page, suppress_bleed_through
+
+        if is_blank_page(image):
+            return []
+        cleaned = suppress_bleed_through(image)
+        if hasattr(self.detector, "detect_with_boxes"):
+            detected = self.detector.detect_with_boxes(cleaned)
+            lines = [crops for crops, _ in detected]
+            boxes = [box for _, box in detected]
+        else:
+            lines = self.detector.detect(cleaned)
+            boxes = [None] * len(lines)
+
         flat = [seg for line in lines for seg in line]
         if not flat:
             return []
         recognised = self.recognizer.recognize(flat, batch_size=self.batch_size)
         out, i = [], 0
-        for line in lines:
+        for line_idx, line in enumerate(lines):
             parts = recognised[i : i + len(line)]
             i += len(line)
             text = " ".join(t for t, _ in parts if t).strip()
             if not text:
                 continue
             conf = sum(c for _, c in parts) / len(parts)
-            out.append(OCRLine(page=page, text=text, confidence=round(conf, 4)))
+            if conf < 0.25 and len(text) < 3:
+                continue
+            line_box = boxes[line_idx] if line_idx < len(boxes) else None
+            out.append(OCRLine(page=page, text=text, confidence=round(conf, 4), box=line_box))
         return out
 
 

@@ -84,9 +84,19 @@ function QuestionRow({ question: q, answer: a, mode, expanded, onToggle, onOverr
           </span>
           <span className="mt-1 flex flex-wrap items-center gap-1.5">
             <Badge tone="neutral">{objective ? 'Objective' : 'Subjective'}</Badge>
-            {mode === 'teacher' && pending && flags.lowConfidence && (
+            {mode === 'teacher' && pending && flags.answerNotFound && (
               <Badge tone="warn" icon="alert">
-                Low confidence {a.confidence.toFixed(2)}
+                Answer not found
+              </Badge>
+            )}
+            {mode === 'teacher' && pending && flags.segmentationUncertain && (
+              <Badge tone="warn" icon="alert">
+                Segmentation uncertain
+              </Badge>
+            )}
+            {mode === 'teacher' && pending && flags.lowConfidence && !flags.answerNotFound && (
+              <Badge tone="warn" icon="alert">
+                Low confidence {typeof a.confidence === 'number' ? a.confidence.toFixed(2) : ''}
               </Badge>
             )}
             {mode === 'teacher' && pending && flags.relevanceMismatch && (

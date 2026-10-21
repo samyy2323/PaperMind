@@ -6,6 +6,7 @@ from app.core.config import Settings
 INJECTION = "injection_suspected"
 PARSE_FAILURE = "parse_failure"
 LOW_CONFIDENCE = "low_confidence"
+ANSWER_NOT_FOUND = "answer_not_found"
 
 
 def decide_flag(
@@ -18,6 +19,10 @@ def decide_flag(
     parse_status: str,
     settings: Settings,
 ) -> str | None:
+    # Empty extractions must never be silently marked 0 without alerting the teacher.
+    if parse_status == "empty":
+        return ANSWER_NOT_FOUND
+
     # High mark for an answer that has almost nothing to do with the syllabus/reference material: the
     # profile of a prompt-injection or gibberish answer that fooled the LLM.
     if (

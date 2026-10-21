@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     # --- text correction ---
     # Path or HF id of a fine-tuned ByT5/BART seq2seq checkpoint. Empty => pass-through (see correction/).
     CORRECTION_MODEL_PATH: str = ""
+    ENABLE_CORRECTION: bool = True
 
     # --- RAG ---
     EMBED_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"

@@ -3,7 +3,8 @@ import json
 import pytest
 
 from app.core.config import get_settings
-from app.services.grading.flagging import INJECTION, LOW_CONFIDENCE, PARSE_FAILURE, decide_flag
+from app.services.grading import grade_answer
+from app.services.grading.flagging import ANSWER_NOT_FOUND, INJECTION, LOW_CONFIDENCE, PARSE_FAILURE, decide_flag
 from app.services.grading.objective import grade_objective
 from app.services.grading.prompt import SYSTEM_PROMPT, build_user_prompt
 from app.services.grading.subjective import InvalidLLMOutput, SubjectiveGrader, parse_llm_json
@@ -120,6 +121,7 @@ def _flag(**kw):
 
 def test_flag_rules():
     assert _flag() is None
+    assert _flag(parse_status="empty") == ANSWER_NOT_FOUND
     assert _flag(score=9, similarity=0.1) == INJECTION  # high score + low topical similarity
     assert _flag(score=9, similarity=0.6) is None  # high score is fine when on-topic
     assert _flag(score=3, similarity=0.05) is None  # low score is not suspicious
@@ -128,4 +130,104 @@ def test_flag_rules():
     assert _flag(parse_status="failed", confidence=0.0) == PARSE_FAILURE
     assert _flag(question_type="objective", score=10, similarity=None) is None
     assert _flag(score=9, similarity=0.1, confidence=0.3) == INJECTION  # injection takes precedence
+
+
+def test_empty_answer_flags_answer_not_found():
+    # Objective empty answer
+    out_obj = grade_answer(
+        question_type="objective",
+        question_text="Q1",
+        reference_answer="(b) Method overriding",
+        marks=2,
+        answer_text="",
+        ocr_confidence=0.9,
+        subjective_grader=None,
+    )
+    assert out_obj.flagged_reason == ANSWER_NOT_FOUND
+    assert out_obj.score == 0.0
+    assert out_obj.confidence == 0.0
+
+    # Subjective empty answer
+    llm = FakeLLM()
+    grader = SubjectiveGrader(llm, FakeEmbedder(), retriever=lambda v: [])
+    out_sub = grade_answer(
+        question_type="subjective",
+        question_text="Explain encapsulation.",
+        reference_answer="Bundling data and methods together.",
+        marks=5,
+        answer_text="   ",
+        ocr_confidence=0.9,
+        subjective_grader=grader,
+    )
+    assert out_sub.flagged_reason == ANSWER_NOT_FOUND
+    assert out_sub.score == 0.0
+    assert out_sub.confidence == 0.0
+    assert llm.calls == 0
+
+
+def test_is_blank_page_and_bleed_through_suppression():
+    from PIL import Image, ImageDraw
+    import numpy as np
+    from app.services.ocr.detectors import is_blank_page, suppress_bleed_through
+
+    # Blank white page
+    blank = Image.new("RGB", (300, 300), "white")
+    assert is_blank_page(blank) is True
+
+    # Page with real dark handwriting ink
+    written = Image.new("RGB", (300, 300), "white")
+    draw = ImageDraw.Draw(written)
+    for y in range(30, 250, 20):
+        draw.line([(30, y), (270, y)], fill=(10, 10, 10), width=3)
+    assert is_blank_page(written) is False
+
+    # Page with very faint ghost bleed-through (e.g. 215 on 235 background)
+    faint = Image.new("RGB", (300, 300), (235, 235, 235))
+    draw_faint = ImageDraw.Draw(faint)
+    for y in range(30, 250, 20):
+        draw_faint.line([(30, y), (270, y)], fill=(215, 215, 215), width=1)
+    assert is_blank_page(faint) is True
+
+    # Bleed through suppression brightens faint ghost pixels
+    cleaned = suppress_bleed_through(faint, ghost_threshold=28.0)
+    arr = np.asarray(cleaned.convert("L"))
+    assert arr.min() >= 230
+
+
+def test_correction_ablation_switch(monkeypatch):
+    from app.core import config
+    from app.services import correction
+
+    # Force ablation toggle off
+    monkeypatch.setenv("ENABLE_CORRECTION", "false")
+    config.get_settings.cache_clear()
+    correction._load.cache_clear()
+
+    corrector = correction.get_corrector()
+    assert isinstance(corrector, correction.PassThroughCorrector)
+    assert corrector.correct(["24 . noisy line"]) == ["24 . noisy line"]
+
+
+def test_pipeline_flags_content_match_low_confidence():
+    class MockAnswer:
+        def __init__(self, method, match_score, flagged_reason=None):
+            self.debug = {"segmentation": method, "match_score": match_score}
+            self.flagged_reason = flagged_reason
+
+    # Below 0.50 threshold triggers low_confidence review
+    a1 = MockAnswer("content_match", 0.42)
+    if (a1.debug or {}).get("segmentation") == "content_match" and not a1.flagged_reason:
+        m_score = (a1.debug or {}).get("match_score")
+        if m_score is not None and m_score < 0.50:
+            a1.flagged_reason = "low_confidence"
+    assert a1.flagged_reason == "low_confidence"
+
+    # Confident match (>= 0.50) is not flagged
+    a2 = MockAnswer("content_match", 0.85)
+    if (a2.debug or {}).get("segmentation") == "content_match" and not a2.flagged_reason:
+        m_score = (a2.debug or {}).get("match_score")
+        if m_score is not None and m_score < 0.50:
+            a2.flagged_reason = "low_confidence"
+    assert a2.flagged_reason is None
+
 

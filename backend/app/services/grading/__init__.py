@@ -32,10 +32,15 @@ def grade_answer(
     subjective_grader: SubjectiveGrader | None,
 ) -> GradeOutcome:
     settings = get_settings()
+    is_empty = not (answer_text or "").strip()
 
     if question_type == "objective":
         r = grade_objective(answer_text, reference_answer, marks)
-        conf, sim, just, correct, status, debug = r.confidence, None, None, r.correct, "ok", {"detail": r.detail}
+        conf, sim, just, correct, status, debug = (
+            (0.0, None, None, False, "empty", {"detail": r.detail})
+            if is_empty
+            else (r.confidence, None, None, r.correct, "ok", {"detail": r.detail})
+        )
         score = r.score
     else:
         if subjective_grader is None:
@@ -44,8 +49,10 @@ def grade_answer(
         score, conf, sim, just, correct, status = s.score, s.confidence, s.similarity, s.justification, None, s.parse_status
         debug = {"parse_status": status, "retrieved_chunks": [c[:200] for c in s.chunks]}
 
-    # OCR uncertainty caps overall confidence: a shaky transcription cannot be graded confidently.
-    if ocr_confidence is not None:
+    if is_empty:
+        conf = 0.0
+    elif ocr_confidence is not None:
+        # OCR uncertainty caps overall confidence: a shaky transcription cannot be graded confidently.
         conf = min(conf, ocr_confidence)
 
     flag = decide_flag(
