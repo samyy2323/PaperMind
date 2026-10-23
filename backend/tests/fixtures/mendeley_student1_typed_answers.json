@@ -1,0 +1,18 @@
+{
+  "_note": "Hand transcription of Student_1's 15 short answers from the scanned sheet of the public Mendeley dataset (DOI 10.17632/sf3kvjwknt.1, CC BY 4.0), typed exactly as written (misspellings kept, struck-through words omitted). Used as the 'perfect OCR' oracle for grader evaluation. Q32 and Q33: the student wrote only the question / an unfinished sentence.",
+  "21": "Supervised learning is a machine learning algorithm which we give labeled data as input and expect output as prediction we want.",
+  "22": "This model doesn't have high accuracy, so it needs better training dataset or more than one training dataset.",
+  "23": "Regression analysis is the method uses to analysis the output of regression.",
+  "24": "Hard to find dataset to work on. (Dataset are expensive and confidential.) Required large data to train in order to get accuracy.",
+  "25": "Financial sector. Transportation sector.",
+  "26": "Structured data are the well organized data such as csv file, excel file. Semi-structured data are the data which are half organized such as Json, html file.",
+  "27": "We find out an Outlier in the data by using Outlier detection technique such as Z-score and IQR.",
+  "28": "Data pre-processing is the process for removing incomplete, incorrect and inaccurate data and replacing missing values.",
+  "29": "Data normalization is required in K-NN because after data is normalized it is easy to give K point, so it will not over fitting or underfitting.",
+  "30": "Continuous attributes are discretized by converting to interval form. Example: 1,5,9,10,11,12,19,20 -> 1-10, 11-20.",
+  "31": "k in k-means algorithm is the pre-defined cluster.",
+  "32": "",
+  "33": "gradient descent is.",
+  "34": "P1: Good classification. The distance between gutters is large and no data between gutters. P2: Bad classification. There are data between gutters. P3: Bad classification. The distance between gutters is small.",
+  "35": "Radial Basis function kernel works by using margin vector to calculate distance margin point and hyperplane."
+}
